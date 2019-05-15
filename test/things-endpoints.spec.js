@@ -25,7 +25,7 @@ describe('Things Endpoints', function() {
 
   afterEach('cleanup', () => helpers.cleanTables(db))
 
-  describe(`Protected endpoints`, () => {
+  describe.only(`Protected endpoints`, () => {
     beforeEach('insert things', () =>
       helpers.seedThingsTables(
         db,
@@ -48,10 +48,10 @@ describe('Things Endpoints', function() {
 
     protectedEndpoints.forEach(endpoint => {
       describe(endpoint.name, () => {
-        it(`responds with 401 'Missing basic token' when no basic token`, () => {
+        it(`responds with 401 'Missing bearer token' when no basic token`, () => {
           return supertest(app)
             .get(endpoint.path)
-            .expect(401, { error: `Missing basic token` })
+            .expect(401, { error: `Missing bearer token` })
         })
 
         it(`responds 401 'Unauthorized request' when no credentials in token`, () => {
