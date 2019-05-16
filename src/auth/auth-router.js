@@ -2,10 +2,9 @@
 
 const express = require('express');
 const AuthService = require('./auth-service');
+
 const authRouter = express.Router();
 const jsonBodyParser = express.json();
-
-
 
 authRouter
   .post('/login', jsonBodyParser, (req, res, next) => {
@@ -17,6 +16,7 @@ authRouter
         return res.status(400).json({
           error: `Missing '${key}' in request body`
         });
+
     AuthService.getUserWithUserName(
       req.app.get('db'),
       loginUser.user_name
@@ -26,19 +26,14 @@ authRouter
           return res.status(400).json({
             error: 'Incorrect user_name or password',
           });
-        it('responds 400 \'invalid user_name or password\' when bad password', () => {
-          const userInvalidPass = { user_name: testUser.user_name, password: 'incorrect' };
-          return supertest(app)
-            .post('/api/auth/login')
-            .send(userInvalidPass)
-            .expect(400, { error: 'Incorrect user_name or password' });
-        });
+
         return AuthService.comparePasswords(loginUser.password, dbUser.password)
           .then(compareMatch => {
             if (!compareMatch)
               return res.status(400).json({
                 error: 'Incorrect user_name or password',
               });
+
             const sub = dbUser.user_name;
             const payload = { user_id: dbUser.id };
             res.send({
