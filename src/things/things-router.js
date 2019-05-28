@@ -7,6 +7,7 @@ const thingsRouter = express.Router()
 thingsRouter
   .route('/')
   .get((req, res, next) => {
+    console.log('hello')
     ThingsService.getAllThings(req.app.get('db'))
       .then(things => {
         res.json(ThingsService.serializeThings(things))
